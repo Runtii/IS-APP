@@ -11,24 +11,9 @@ app.listen(PORT, () => {
   console.log("Server is running");
 });
 
-const printTable = (array) => {
-  let nr = 0;
-  let naglowek =
-    "| Indeks | nazwaProducenta | przekatnaEkranu | rozdzielczoscEkranu | rodzajEkranu | czyEkranJestDotykowy | nazwaProcesora | liczbaRdzeni | taktowanie | RAM | wielkoscDysku | rodzajDysku | ukladGraficzny | pamiecUkladuGraficznego | nazwaSystemu | rodzajNapeduFizycznego |\n\n";
+app.get("/getData", (err, res) => {});
 
-  process.stdout.write(naglowek);
-
-  for (i = 0; i < 24; i++) {
-    process.stdout.write(" | " + String(nr) + "");
-    process.stdout.write(" | ");
-    for (j = 0; j < 16; j++) {
-      if (array[i][j] === "") process.stdout.write("brak danych" + " | ");
-      else process.stdout.write(array[i][j] + " | ");
-    }
-    process.stdout.write("\n\n");
-    nr = nr + 1;
-  }
-};
+app.post("/saveData", (err, res) => {});
 
 const processData = (rawData) => {
   rawData = rawData.toString();
@@ -36,17 +21,6 @@ const processData = (rawData) => {
     return line.split(";");
   });
   return array;
-};
-
-const printSummary = (summary) => {
-  for (i = 0; i < summary.length; i++) {
-    console.log(
-      "Producent: ",
-      summary[i].name,
-      ", ilość laptopów: ",
-      summary[i].volume
-    );
-  }
 };
 
 const summary = (array) => {
@@ -79,11 +53,8 @@ const readFromFile = () => {
   });
 };
 
-const saveToFile = () => {
-  let text =
-    "Ex velit ut qui aliqua non mollit dolor elit tempor incididunt sit aliqua.";
-  let filename = "temp";
-  fs.writeFile(filename + ".txt", text, (err) => {
+const saveToFile = (text, filename) => {
+  fs.writeFile("files/" + filename + ".txt", text, (err) => {
     if (err) throw err;
     console.log("zapisano");
   });
