@@ -2,8 +2,14 @@ const express = require("express");
 const app = express();
 const PORT = 3001;
 const cors = require("cors");
-
 const fs = require("fs");
+app.use(cors());
+app.use(express.json());
+
+//sets up app on given port(3001)
+app.listen(PORT, () => {
+  console.log("Server is running");
+});
 
 const printTable = (array) => {
   let nr = 0;
@@ -64,19 +70,23 @@ const summary = (array) => {
   printSummary(summary);
 };
 
-fs.readFile("./katalog.txt", (err, data) => {
-  if (err) throw err;
-  let array = processData(data);
-  printTable(array);
-  summary(array);
-});
+const readFromFile = () => {
+  fs.readFile("./katalog.txt", (err, data) => {
+    if (err) throw err;
+    let array = processData(data);
+    printTable(array);
+    summary(array);
+  });
+};
 
-app.use(cors());
-app.use(express.json());
-
-//sets up app on given port(3001)
-app.listen(PORT, () => {
-  console.log("Server is running");
-});
+const saveToFile = () => {
+  let text =
+    "Ex velit ut qui aliqua non mollit dolor elit tempor incididunt sit aliqua.";
+  let filename = "temp";
+  fs.writeFile(filename + ".txt", text, (err) => {
+    if (err) throw err;
+    console.log("zapisano");
+  });
+};
 
 module.exports = {};
