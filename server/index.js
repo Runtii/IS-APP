@@ -11,6 +11,17 @@ app.listen(PORT, () => {
   console.log("Server is running");
 });
 
+app.post("/getDefault", (req, res) => {
+  console.log(req.body.fileName);
+  if (req.body != null) {
+    console.log(req.body.fileName);
+    readFromFile(req.body.fileName, function (data) {
+      console.log(data);
+      res.send(data);
+    });
+  }
+});
+
 app.post("/getData", (req, res) => {
   console.log(req.body.fileName);
   if (req.body != null) {

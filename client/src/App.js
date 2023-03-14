@@ -1,6 +1,17 @@
 import "./App.css";
+import { useState, useEffect } from "react";
 import Axios from "axios";
+
+const getDefaultData = () => {
+  Axios.post("http://localhost:3001/getDefault", {
+    fileName: "katalog",
+  }).then((response) => {
+    if (response !== null) console.log(response);
+  });
+};
+
 function App() {
+  const [defaultData, setDefaultData] = useState(getDefaultData());
   const getData = (filename) => {
     Axios.post("http://localhost:3001/getData", { fileName: filename }).then(
       (response) => {
