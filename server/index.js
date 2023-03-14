@@ -41,13 +41,19 @@ const readFromFile = (fileName, callback) => {
 
 app.post("/putData", (req, res) => {
   if (req.body != null) {
-    saveToFile(req.body.fileName, req.body.data, function (response) {
+    unifyData(req.body, function (response) {
       res.send(response);
     });
-    return 0;
   }
   return 0;
 });
+
+const unifyData = (data, callback) => {
+  console.log(data);
+  saveToFile(data.fileName, data.data, function (response) {
+    return callback(response);
+  });
+};
 
 const saveToFile = (filename, text, callback) => {
   fs.writeFile("files/" + filename + ".txt", text, (err) => {

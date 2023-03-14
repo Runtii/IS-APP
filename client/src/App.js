@@ -22,7 +22,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <button onClick={() => getData("katalog")}>GET</button>
-        <button onClick={() => putData("temp", "testowe słowa")}>PUT</button>
+        <button onClick={() => putData("temp", "temp")}>PUT</button>
       </header>
     </div>
   );
