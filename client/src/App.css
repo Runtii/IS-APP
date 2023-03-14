@@ -1,3 +1,74 @@
 .App {
   text-align: center;
 }
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+table {
+  align-self: center;
+}
+
+th {
+  background-color: rgba(0, 15, 36, 0.432);
+  border: solid rgba(1, 24, 59, 0.137);
+  border-radius: 10px;
+  color: rgb(255, 255, 255);
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+td {
+  width: 100px;
+  text-overflow: wrap;
+}
+
+textarea {
+  resize: none;
+  width: 100px;
+  background-color: rgba(0, 30, 71, 0.212);
+  color: rgb(255, 255, 255);
+  border: solid rgba(1, 24, 59, 0.137);
+  border-radius: 10px;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-top: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+textarea:focus {
+  background-color: rgba(0, 136, 141, 0.473);
+  border: solid rgba(0, 65, 70, 0.452);
+}
+
+textarea::selection {
+  color: white;
+  background: black;
+}
+
+.container {
+  display: flex;
+  align-self: center;
+}
+
+#GetButton,
+#PutButton {
+  font-weight: bolder;
+  margin: 50px 100px 50px 100px;
+  padding: 20px;
+  background-color: rgba(0, 24, 61, 0.452);
+  border: solid rgba(0, 17, 43, 0.267);
+  border-radius: 10px;
+  color: rgb(255, 255, 255);
+}
+
+#GetButton:active,
+#PutButton:active {
+  background-color: rgba(0, 54, 134, 0.452);
+  border: solid rgba(0, 56, 139, 0.349);
+  scale: 0.9;
+}
