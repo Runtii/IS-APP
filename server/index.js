@@ -11,9 +11,16 @@ app.listen(PORT, () => {
   console.log("Server is running");
 });
 
-app.get("/getData", (err, res) => {});
-
-app.post("/saveData", (err, res) => {});
+app.post("/getData", (req, res) => {
+  console.log(req.body.fileName);
+  if (req.body != null) {
+    console.log(req.body.fileName);
+    readFromFile(req.body.fileName, function (data) {
+      console.log(data);
+      res.send(data);
+    });
+  }
+});
 
 const processData = (rawData) => {
   rawData = rawData.toString();
@@ -23,40 +30,29 @@ const processData = (rawData) => {
   return array;
 };
 
-const summary = (array) => {
-  let summary = [];
-  for (i = 0; i < array.length; i++) {
-    let index = 0;
-    let exist = false;
-    for (j = 0; j < summary.length; j++) {
-      if (array[i][0] === summary[j].name) {
-        index = j;
-        exist = true;
-      }
-    }
-
-    if (!exist) summary.push({ name: array[i][0], volume: 1 });
-    else {
-      summary[index].volume = summary[index].volume + 1;
-    }
-  }
-
-  printSummary(summary);
-};
-
-const readFromFile = () => {
-  fs.readFile("./katalog.txt", (err, data) => {
-    if (err) throw err;
+const readFromFile = (fileName, callback) => {
+  fs.readFile("files/" + fileName + ".txt", (err, data) => {
+    if (err) return callback({ ERROR: "YES", response: "ERROR " + err });
     let array = processData(data);
-    printTable(array);
-    summary(array);
+    console.log(array);
+    return callback(array);
   });
 };
 
-const saveToFile = (text, filename) => {
+app.post("/putData", (req, res) => {
+  if (req.body != null) {
+    saveToFile(req.body.fileName, req.body.data, function (response) {
+      res.send(response);
+    });
+    return 0;
+  }
+  return 0;
+});
+
+const saveToFile = (filename, text, callback) => {
   fs.writeFile("files/" + filename + ".txt", text, (err) => {
-    if (err) throw err;
-    console.log("zapisano");
+    if (err) callback({ response: "ERROR - " + err });
+    return callback({ response: "zapisano" });
   });
 };
 
