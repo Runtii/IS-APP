@@ -19,16 +19,17 @@ th {
   color: rgb(255, 255, 255);
   padding-right: 5px;
   padding-left: 5px;
+  font-size: 12px;
 }
 
 td {
-  width: 100px;
+  width: 80px;
   text-overflow: wrap;
 }
 
 textarea {
   resize: none;
-  width: 100px;
+  width: 80px;
   background-color: rgba(0, 30, 71, 0.212);
   color: rgb(255, 255, 255);
   border: solid rgba(1, 24, 59, 0.137);
@@ -37,7 +38,7 @@ textarea {
   padding-left: 5px;
   padding-top: 10px;
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 textarea:focus {
@@ -64,6 +65,7 @@ textarea::selection {
   border: solid rgba(0, 17, 43, 0.267);
   border-radius: 10px;
   color: rgb(255, 255, 255);
+  font-size: 14px;
 }
 
 #GetButton:active,

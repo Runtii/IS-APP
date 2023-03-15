@@ -12,22 +12,16 @@ app.listen(PORT, () => {
 });
 
 app.post("/getDefault", (req, res) => {
-  console.log(req.body.fileName);
   if (req.body != null) {
-    console.log(req.body.fileName);
     readFromFile(req.body.fileName, function (data) {
-      console.log(data);
       res.send(data);
     });
   }
 });
 
 app.post("/getData", (req, res) => {
-  console.log(req.body.fileName);
   if (req.body != null) {
-    console.log(req.body.fileName);
     readFromFile(req.body.fileName, function (data) {
-      console.log(data);
       res.send(data);
     });
   }
@@ -45,7 +39,6 @@ const readFromFile = (fileName, callback) => {
   fs.readFile("files/" + fileName + ".txt", (err, data) => {
     if (err) return callback({ ERROR: "YES", response: "ERROR " + err });
     let array = processData(data);
-    console.log(array);
     return callback(array);
   });
 };
