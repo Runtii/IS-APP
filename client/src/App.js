@@ -4,7 +4,7 @@ import Axios from "axios";
 
 function App() {
   const [defaultData, setDefaultData] = useState([]);
-  const [loadDefaultData, setloadDefaultData] = useState("");
+  const [loadDefaultData] = useState("");
   const [data, setData] = useState([]);
 
   useEffect(() => getDefaultData(), [loadDefaultData]);
@@ -18,7 +18,6 @@ function App() {
       fileName: "katalog",
     }).then((response) => {
       if (response.data !== null) {
-        console.log(response.data);
         setDefaultData(response.data);
       }
     });
@@ -28,17 +27,30 @@ function App() {
     Axios.post("http://localhost:3001/getData", { fileName: filename }).then(
       (response) => {
         if (response.data !== null) {
-          console.log(response.data);
           setData(response.data);
         }
       }
     );
   };
 
-  const putData = (filename, data) => {
+  const getDataFromFields = () => {
+    let array = [];
+    for (let i = 0; i < data.length; i++) {
+      let tempArray = [];
+      for (let j = 0; j < 14; j++) {
+        tempArray.push(document.getElementById(i + "" + j).value);
+      }
+      array.push(tempArray);
+    }
+    return array;
+  };
+
+  const putData = (filename) => {
+    let array = getDataFromFields();
+    console.log(array);
     Axios.post("http://localhost:3001/putData", {
       fileName: filename,
-      data: data,
+      data: array,
     }).then((response) => {
       if (response !== null) console.log(response);
     });
@@ -51,7 +63,7 @@ function App() {
           <button id="GetButton" onClick={() => getData("test")}>
             Wczytaj dane z pliku TXT
           </button>
-          <button id="PutButton" onClick={() => putData("temp", "temp")}>
+          <button id="PutButton" onClick={() => putData("temp")}>
             Zapisz dane do pliku TXT
           </button>
         </div>
@@ -83,46 +95,74 @@ function App() {
                 return (
                   <tr key={key}>
                     <td>
-                      <textarea>{val[0] ? val[0] : "Brak danych"}</textarea>
+                      <textarea id={key + "0"}>
+                        {val[0] ? val[0] : "Brak danych"}
+                      </textarea>
                     </td>
                     <td>
-                      <textarea>{val[1] ? val[1] : "Brak danych"}</textarea>
+                      <textarea id={key + "1"}>
+                        {val[1] ? val[1] : "Brak danych"}
+                      </textarea>
                     </td>
                     <td>
-                      <textarea>{val[2] ? val[2] : "Brak danych"}</textarea>
+                      <textarea id={key + "2"}>
+                        {val[2] ? val[2] : "Brak danych"}
+                      </textarea>
                     </td>
                     <td>
-                      <textarea>{val[3] ? val[3] : "Brak danych"}</textarea>
+                      <textarea id={key + "3"}>
+                        {val[3] ? val[3] : "Brak danych"}
+                      </textarea>
                     </td>
                     <td>
-                      <textarea>{val[4] ? val[4] : "Brak danych"}</textarea>
+                      <textarea id={key + "4"}>
+                        {val[4] ? val[4] : "Brak danych"}
+                      </textarea>
                     </td>
                     <td>
-                      <textarea>{val[5] ? val[5] : "Brak danych"}</textarea>
+                      <textarea id={key + "5"}>
+                        {val[5] ? val[5] : "Brak danych"}
+                      </textarea>
                     </td>
                     <td>
-                      <textarea>{val[6] ? val[6] : "Brak danych"}</textarea>
+                      <textarea id={key + "6"}>
+                        {val[6] ? val[6] : "Brak danych"}
+                      </textarea>
                     </td>
                     <td>
-                      <textarea>{val[7] ? val[7] : "Brak danych"}</textarea>
+                      <textarea id={key + "7"}>
+                        {val[7] ? val[7] : "Brak danych"}
+                      </textarea>
                     </td>
                     <td>
-                      <textarea>{val[8] ? val[8] : "Brak danych"}</textarea>
+                      <textarea id={key + "8"}>
+                        {val[8] ? val[8] : "Brak danych"}
+                      </textarea>
                     </td>
                     <td>
-                      <textarea>{val[9] ? val[9] : "Brak danych"}</textarea>
+                      <textarea id={key + "9"}>
+                        {val[9] ? val[9] : "Brak danych"}
+                      </textarea>
                     </td>
                     <td>
-                      <textarea>{val[10] ? val[10] : "Brak danych"}</textarea>
+                      <textarea id={key + "10"}>
+                        {val[10] ? val[10] : "Brak danych"}
+                      </textarea>
                     </td>
                     <td>
-                      <textarea>{val[11] ? val[11] : "Brak danych"}</textarea>
+                      <textarea id={key + "11"}>
+                        {val[11] ? val[11] : "Brak danych"}
+                      </textarea>
                     </td>
                     <td>
-                      <textarea>{val[12] ? val[12] : "Brak danych"}</textarea>
+                      <textarea id={key + "12"}>
+                        {val[12] ? val[12] : "Brak danych"}
+                      </textarea>
                     </td>
                     <td>
-                      <textarea>{val[13] ? val[13] : "Brak danych"}</textarea>
+                      <textarea id={key + "13"}>
+                        {val[13] ? val[13] : "Brak danych"}
+                      </textarea>
                     </td>
                   </tr>
                 );
