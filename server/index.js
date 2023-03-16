@@ -53,8 +53,17 @@ app.post("/putData", (req, res) => {
 });
 
 const unifyData = (data, callback) => {
-  console.log(data);
-  saveToFile(data.fileName, data.data, function (response) {
+  let dataToSave = "";
+  console.log(data.data.length);
+  for (let i = 0; i < data.data.length; i++) {
+    let temp = "";
+    for (let j = 0; j < 14; j++) {
+      temp += data.data[i][j] + ";";
+    }
+    if (i < data.data.length - 1) dataToSave += temp + "\n";
+    else dataToSave += temp;
+  }
+  saveToFile(data.fileName, dataToSave, function (response) {
     return callback(response);
   });
 };

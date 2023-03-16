@@ -63,7 +63,7 @@ function App() {
           <button id="GetButton" onClick={() => getData("test")}>
             Wczytaj dane z pliku TXT
           </button>
-          <button id="PutButton" onClick={() => putData("temp")}>
+          <button id="PutButton" onClick={() => putData("test")}>
             Zapisz dane do pliku TXT
           </button>
         </div>
