@@ -23,16 +23,24 @@ function App() {
     });
   };
 
+  const removeElements = () => {
+    for (let i = 0; i < data.length; i++) {
+      for (let j = 0; j < 14; j++) {
+        document.getElementById(i + "" + j).remove();
+      }
+    }
+  };
+
   const getData = (filename) => {
     Axios.post("http://localhost:3001/getData", { fileName: filename }).then(
       (response) => {
         if (response.data !== null) {
           setData(response.data);
+          console.log(data);
         }
       }
     );
   };
-
   const getDataFromFields = () => {
     let array = [];
     for (let i = 0; i < data.length; i++) {

@@ -58,7 +58,8 @@ const unifyData = (data, callback) => {
   for (let i = 0; i < data.data.length; i++) {
     let temp = "";
     for (let j = 0; j < 14; j++) {
-      temp += data.data[i][j] + ";";
+      if (data.data[i][j] === "Brak danych") temp += ";";
+      else temp += data.data[i][j] + ";";
     }
     if (i < data.data.length - 1) dataToSave += temp + "\n";
     else dataToSave += temp;
