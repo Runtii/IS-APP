@@ -64,13 +64,14 @@ const unifyData = (data, callback) => {
     if (i < data.data.length - 1) dataToSave += temp + "\n";
     else dataToSave += temp;
   }
+
   saveToFile(data.fileName, dataToSave, function (response) {
     return callback(response);
   });
 };
 
-const saveToFile = (filename, text, callback) => {
-  fs.writeFile("files/" + filename + ".txt", text, (err) => {
+const saveToFile = (filename, data, callback) => {
+  fs.writeFile("files/" + filename + ".txt", data, (err) => {
     if (err) callback({ response: "ERROR - " + err });
     return callback({ response: "zapisano" });
   });

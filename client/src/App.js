@@ -53,17 +53,21 @@ function App() {
     else document.getElementById("getField").style.visibility = "visible";
 
     document.getElementById("GetERRORBox").style.visibility = "hidden";
+    document.getElementById("GetERRORBox").innerHTML = "";
   };
 
   const getData = (filename) => {
     Axios.post("http://localhost:3001/getData", { fileName: filename }).then(
       (response) => {
-        if (response.data !== null) {
+        if (response.data !== null && !response.data.ERROR) {
           setData(response.data);
           console.log(response.data);
-        } else if (response.ERROR === "Yes") {
+        }
+
+        if (response.data.ERROR === "YES") {
           document.getElementById("GetERRORBox").style.visibility = "visible";
-          console.log(response.data);
+          document.getElementById("GetERRORBox").innerHTML =
+            "Plik nie istnieje";
         }
       }
     );
@@ -123,6 +127,7 @@ function App() {
             <input
               id="inputGet"
               onChange={() => {
+                document.getElementById("GetERRORBox").innerHTML = "";
                 document.getElementById("GetERRORBox").style.visibility =
                   "hidden";
               }}
@@ -134,7 +139,7 @@ function App() {
             >
               Pobierz dane
             </button>
-            <div id="GetERRORBox">Plik nie istnieje</div>
+            <div id="GetERRORBox"></div>
           </div>
           <div id="putField">
             <input id="inputPut"></input>
