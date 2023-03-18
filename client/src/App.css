@@ -8,6 +8,10 @@ header {
   align-items: center;
 }
 
+.container {
+  margin-bottom: 20px;
+}
+
 table {
   align-self: center;
 }
@@ -36,7 +40,7 @@ textarea {
   border-radius: 10px;
   padding-right: 5px;
   padding-left: 5px;
-  padding-top: 10px;
+  padding-top: 15px;
   text-align: center;
   font-size: 12px;
 }
@@ -56,10 +60,9 @@ textarea::selection {
   align-self: center;
 }
 
-#GetButton,
-#PutButton {
+.button {
   font-weight: bolder;
-  margin: 50px 100px 50px 100px;
+  margin: 30px 100px 0px 100px;
   padding: 20px;
   background-color: rgba(0, 24, 61, 0.452);
   border: solid rgba(0, 17, 43, 0.267);
@@ -67,10 +70,39 @@ textarea::selection {
   color: rgb(255, 255, 255);
   font-size: 14px;
 }
-
-#GetButton:active,
-#PutButton:active {
+.button:active {
   background-color: rgba(0, 54, 134, 0.452);
   border: solid rgba(0, 56, 139, 0.349);
   scale: 0.9;
+}
+
+input {
+  padding: 20px;
+  margin-right: 30px;
+  background-color: rgba(0, 30, 71, 0.212);
+  color: rgb(255, 255, 255);
+  border: solid rgba(1, 24, 59, 0.137);
+  border-radius: 10px;
+}
+
+#getField,
+#putField {
+  color: rgb(255, 255, 255);
+  margin: 0px 105px 0px 100px;
+  padding: 0px;
+  visibility: hidden;
+}
+
+#putField {
+  margin-left: 100px;
+}
+
+#putSend,
+#getSend {
+  margin: 0px;
+}
+
+#GetERRORBox {
+  margin-top: 20px;
+  visibility: hidden;
 }

@@ -57,7 +57,7 @@ const unifyData = (data, callback) => {
   console.log(data.data.length);
   for (let i = 0; i < data.data.length; i++) {
     let temp = "";
-    for (let j = 0; j < 14; j++) {
+    for (let j = 0; j < 15; j++) {
       if (data.data[i][j] === "Brak danych") temp += ";";
       else temp += data.data[i][j] + ";";
     }
