@@ -7,6 +7,7 @@ function App() {
   const [loadDefaultData] = useState("");
   const [data, setData] = useState([]);
   const [validation, setValidation] = useState(true);
+
   useEffect(() => getDefaultData(), [loadDefaultData]);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ function App() {
     el.style.textShadow =
       "-1px -1px 0 rgb(255, 255, 255), 1px -1px 0 rgb(255, 255, 255),-1px 1px 0 rgb(255, 255, 255), 1px 1px 0 rgb(255, 255, 255)";
   };
+
   const setDefault = (id) => {
     let el = document.getElementById(id);
     el.fontSize = 12;
@@ -48,24 +50,77 @@ function App() {
     el.style.border = "solid rgba(1, 24, 59, 0.137)";
   };
 
+  const Test = (id, regex) => {
+    let el = document.getElementById(id);
+    if (!regex.test(el.value.toString())) {
+      setError(id);
+      setValidation(false);
+      return false;
+    } else {
+      setDefault(id);
+      return true;
+    }
+  };
+
   const validateData = (id) => {
     let el = document.getElementById(id);
-    if (el.value === "" || el.value === undefined || el.value === null) {
+    let row = "";
+    if (id.length === 3) {
+      row += el.id[2];
+    } else if (id.length === 4 && el.id.charAt(2) === " ") {
+      row += el.id.charAt(3).toString + "" + el.id.charAt(4);
+    } else if (id.length === 4 && el.id.charAt(3) === " ") {
+      row += el.id.charAt(4);
+    } else if (id.length === 5) {
+      row += el.id.charAt(4) + "" + el.id.charAt(5);
+    }
+
+    console.log(row);
+
+    if (
+      el.value === "" ||
+      el.value === undefined ||
+      el.value === null ||
+      el.value === "Brak danych"
+    ) {
       {
         setError(id);
+        setValidation(false);
       }
       return false;
     }
-    let regex = new RegExp("[A-Z]?[a-z]+");
-    if (el.id.charAt(0) === "1" && el.id.charAt(1) === " ")
-      if (!regex.test(el.value.toString())) {
-        setError(id);
-        setValidation(false);
-        return false;
-      }
+    let regex;
+    console.log(el.value);
 
-    setDefault(id);
-    return true;
+    switch (row) {
+      case "0":
+        regex = /^[A-Za-z]+$/;
+        return Test(id, regex);
+      case "1":
+        regex = /^[1-9]?[0-9]*\"$/;
+        return Test(id, regex);
+      case "2":
+        regex = /^[1-9]?[0-9]{0,5}x[1-9]?[0-9]{0,5}$/;
+        return Test(id, regex);
+      case "3":
+        regex = /^[A-Za-z]+$/;
+        return Test(id, regex);
+      case "4":
+        regex = /^(tak|nie)$/;
+        return Test(id, regex);
+      case "5":
+        regex = /^[A-Za-z0-9]*\s[A-Za-z0-9]*$/;
+        return Test(id, regex);
+      case "6":
+        regex = /^(1|2|4|8|16|32|64|128)*$/;
+        return Test(id, regex);
+      case "7":
+        regex = /^[0-9]{1,4}$/;
+        return Test(id, regex);
+      case "8":
+        regex = /^[0-9]{1,3}GB$/;
+        return Test(id, regex);
+    }
   };
 
   const updateData = () => {
@@ -144,13 +199,14 @@ function App() {
     if (!validation) {
       for (let i = 0; i < array.length; i++) {
         for (let j = 0; j < 15; j++) {
-          lastValidation = validateData(array[i][j]);
+          lastValidation = validateData(i + " " + j);
           if ((lastValidation = false)) break;
         }
       }
     }
 
     if (lastValidation) {
+      setValidation(true);
       console.log(array);
       Axios.post("http://localhost:3001/putData", {
         fileName: filename,
