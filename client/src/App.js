@@ -6,7 +6,7 @@ function App() {
   const [defaultData, setDefaultData] = useState([]);
   const [loadDefaultData] = useState("");
   const [data, setData] = useState([]);
-
+  const [validation, setValidation] = useState(true);
   useEffect(() => getDefaultData(), [loadDefaultData]);
 
   useEffect(() => {
@@ -29,20 +29,61 @@ function App() {
     });
   };
 
-  // const removeElements = () => {
-  //   for (let i = 0; i < data.length; i++) {
-  //     for (let j = 0; j < 15; j++) {
-  //       document.getElementById(i + "" + j).remove();
-  //     }
-  //   }
-  // };
+  const setError = (id) => {
+    let el = document.getElementById(id);
+    el.style.border = "solid rgba(199, 32, 32, 0.548)";
+    el.fontSize = 20;
+    el.style.color = "red";
+    el.style.fontWeight = "bolder";
+    el.style.textShadow =
+      "-1px -1px 0 rgb(255, 255, 255), 1px -1px 0 rgb(255, 255, 255),-1px 1px 0 rgb(255, 255, 255), 1px 1px 0 rgb(255, 255, 255)";
+  };
+  const setDefault = (id) => {
+    let el = document.getElementById(id);
+    el.fontSize = 12;
+    el.style.color = "white";
+    el.style.textShadow = "none";
+    el.style.fontWeight = "normal";
+    el.style.color = "white";
+    el.style.border = "solid rgba(1, 24, 59, 0.137)";
+  };
+
+  const validateData = (id) => {
+    let el = document.getElementById(id);
+    if (el.value === "" || el.value === undefined || el.value === null) {
+      {
+        setError(id);
+      }
+      return false;
+    }
+    let regex = new RegExp("[A-Z]?[a-z]+");
+    if (el.id.charAt(0) === "1" && el.id.charAt(1) === " ")
+      if (!regex.test(el.value.toString())) {
+        setError(id);
+        setValidation(false);
+        return false;
+      }
+
+    setDefault(id);
+    return true;
+  };
 
   const updateData = () => {
     for (let i = 0; i < data.length; i++) {
       for (let j = 0; j < 15; j++) {
-        if (data[i][j] !== "" && data[i][j] !== undefined)
-          document.getElementById(i + " " + j).value = data[i][j];
-        else document.getElementById(i + " " + j).value = "Brak danych";
+        let el = document.getElementById(i + " " + j);
+        if (
+          data[i][j] === "" ||
+          data[i][j] === undefined ||
+          data[i][j] === null
+        ) {
+          el.value = "Brak danych";
+          setValidation(false);
+          setError(i + " " + j);
+        } else {
+          el.value = data[i][j];
+          setDefault(i + " " + j);
+        }
       }
     }
   };
@@ -90,17 +131,37 @@ function App() {
     if (document.getElementById("putField").style.visibility === "visible")
       document.getElementById("putField").style.visibility = "hidden";
     else document.getElementById("putField").style.visibility = "visible";
+
+    document.getElementById("PutERRORBox").style.visibility = "hidden";
+    document.getElementById("PutERRORBox").innerHTML = "";
   };
 
   const putData = (filename) => {
     let array = getDataFromFields();
-    console.log(array);
-    Axios.post("http://localhost:3001/putData", {
-      fileName: filename,
-      data: array,
-    }).then((response) => {
-      if (response !== null) console.log(response);
-    });
+
+    let lastValidation = false;
+
+    if (!validation) {
+      for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < 15; j++) {
+          lastValidation = validateData(array[i][j]);
+          if ((lastValidation = false)) break;
+        }
+      }
+    }
+
+    if (lastValidation) {
+      console.log(array);
+      Axios.post("http://localhost:3001/putData", {
+        fileName: filename,
+        data: array,
+      }).then((response) => {
+        if (response !== null) console.log(response);
+      });
+    } else {
+      document.getElementById("PutERRORBox").style.visibility = "visible";
+      document.getElementById("PutERRORBox").innerHTML = "Błąd w formularzu";
+    }
   };
 
   return (
@@ -150,6 +211,7 @@ function App() {
             >
               Wyślij dane
             </button>
+            <div id="PutERRORBox"></div>
           </div>
         </div>
         <div className="container">
@@ -184,6 +246,9 @@ function App() {
                           key={key + " 0"}
                           id={key + " 0"}
                           defaultValue={val[0] ? val[0] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 0");
+                          }}
                         ></textarea>
                       </td>
                       <td>
@@ -191,6 +256,9 @@ function App() {
                           key={key + " 1"}
                           id={key + " 1"}
                           defaultValue={val[1] ? val[1] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 1");
+                          }}
                         ></textarea>
                       </td>
                       <td>
@@ -198,6 +266,9 @@ function App() {
                           key={key + " 2"}
                           id={key + " 2"}
                           defaultValue={val[2] ? val[2] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 2");
+                          }}
                         ></textarea>
                       </td>
                       <td>
@@ -205,6 +276,9 @@ function App() {
                           key={key + " 3"}
                           id={key + " 3"}
                           defaultValue={val[3] ? val[3] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 3");
+                          }}
                         ></textarea>
                       </td>
                       <td>
@@ -212,6 +286,9 @@ function App() {
                           key={key + " 4"}
                           id={key + " 4"}
                           defaultValue={val[4] ? val[4] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 4");
+                          }}
                         ></textarea>
                       </td>
                       <td>
@@ -219,6 +296,9 @@ function App() {
                           key={key + " 5"}
                           id={key + " 5"}
                           defaultValue={val[5] ? val[5] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 5");
+                          }}
                         ></textarea>
                       </td>
                       <td>
@@ -226,6 +306,9 @@ function App() {
                           key={key + " 6"}
                           id={key + " 6"}
                           defaultValue={val[6] ? val[6] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 6");
+                          }}
                         ></textarea>
                       </td>
                       <td>
@@ -233,6 +316,9 @@ function App() {
                           key={key + " 7"}
                           id={key + " 7"}
                           defaultValue={val[7] ? val[7] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 7");
+                          }}
                         ></textarea>
                       </td>
                       <td>
@@ -240,6 +326,9 @@ function App() {
                           key={key + " 8"}
                           id={key + " 8"}
                           defaultValue={val[8] ? val[8] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 8");
+                          }}
                         ></textarea>
                       </td>
                       <td>
@@ -247,6 +336,9 @@ function App() {
                           key={key + " 9"}
                           id={key + " 9"}
                           defaultValue={val[9] ? val[9] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 9");
+                          }}
                         ></textarea>
                       </td>
                       <td>
@@ -254,6 +346,9 @@ function App() {
                           key={key + " 10"}
                           id={key + " 10"}
                           defaultValue={val[10] ? val[10] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 10");
+                          }}
                         ></textarea>
                       </td>
                       <td>
@@ -261,6 +356,9 @@ function App() {
                           key={key + " 11"}
                           id={key + " 11"}
                           defaultValue={val[11] ? val[11] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 11");
+                          }}
                         ></textarea>
                       </td>
                       <td>
@@ -268,6 +366,9 @@ function App() {
                           key={key + " 12"}
                           id={key + " 12"}
                           defaultValue={val[12] ? val[12] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 12");
+                          }}
                         ></textarea>
                       </td>
                       <td>
@@ -275,6 +376,9 @@ function App() {
                           key={key + " 13"}
                           id={key + " 13"}
                           defaultValue={val[13] ? val[13] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 13");
+                          }}
                         ></textarea>
                       </td>
                       <td>
@@ -282,6 +386,9 @@ function App() {
                           key={key + " 14"}
                           id={key + " 14"}
                           defaultValue={val[14] ? val[14] : "Brak danych"}
+                          onChange={() => {
+                            validateData(key + " 14");
+                          }}
                         ></textarea>
                       </td>
                     </tr>
