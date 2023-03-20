@@ -64,15 +64,16 @@ function App() {
 
   const validateData = (id) => {
     let el = document.getElementById(id);
+    console.log(el.id.length, el.id, "|", el.id[2], el.id[3]);
     let row = "";
     if (id.length === 3) {
       row += el.id[2];
+    } else if (id.length === 4 && el.id.charAt(1) === " ") {
+      row += el.id[2] + "" + el.id[3];
     } else if (id.length === 4 && el.id.charAt(2) === " ") {
-      row += el.id.charAt(3).toString + "" + el.id.charAt(4);
-    } else if (id.length === 4 && el.id.charAt(3) === " ") {
-      row += el.id.charAt(4);
+      row += el.id[3];
     } else if (id.length === 5) {
-      row += el.id.charAt(4) + "" + el.id.charAt(5);
+      row += el.id[3] + "" + el.id[4];
     }
 
     console.log(row);
