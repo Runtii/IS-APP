@@ -139,6 +139,7 @@ function App() {
   const updateData = () => {
     for (let i = 0; i < data.length; i++) {
       for (let j = 0; j < 15; j++) {
+        console.log(i + " " + j);
         let el = document.getElementById(i + " " + j);
         if (
           data[i][j] === "" ||
