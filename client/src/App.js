@@ -64,7 +64,7 @@ function App() {
 
   const validateData = (id) => {
     let el = document.getElementById(id);
-    console.log(el.id.length, el.id, "|", el.id[2], el.id[3]);
+
     let row = "";
     if (id.length === 3) {
       row += el.id[2];
@@ -75,8 +75,6 @@ function App() {
     } else if (id.length === 5) {
       row += el.id[3] + "" + el.id[4];
     }
-
-    console.log(row);
 
     if (
       el.value === "" ||
@@ -91,7 +89,6 @@ function App() {
       return false;
     }
     let regex;
-    console.log(el.value);
 
     switch (row) {
       case "0":
@@ -101,10 +98,10 @@ function App() {
         regex = /^[1-9]?[0-9]*\"$/;
         return Test(id, regex);
       case "2":
-        regex = /^[1-9]?[0-9]{0,5}x[1-9]?[0-9]{0,5}$/;
+        regex = /^[1-9][0-9]{0,5}x[1-9][0-9]{0,5}$/;
         return Test(id, regex);
       case "3":
-        regex = /^[A-Za-z]+$/;
+        regex = /^(matowa|blyszczaca)$/;
         return Test(id, regex);
       case "4":
         regex = /^(tak|nie)$/;
@@ -113,7 +110,7 @@ function App() {
         regex = /^[A-Za-z0-9]*\s[A-Za-z0-9]*$/;
         return Test(id, regex);
       case "6":
-        regex = /^(1|2|4|8|16|32|64|128)*$/;
+        regex = /^(1|2|4|8|16|32|64|128)$/;
         return Test(id, regex);
       case "7":
         regex = /^[0-9]{1,4}$/;
@@ -121,7 +118,27 @@ function App() {
       case "8":
         regex = /^[0-9]{1,3}GB$/;
         return Test(id, regex);
+      case "9":
+        regex = /^[0-9]{1,5}GB$/;
+        return Test(id, regex);
+      case "10":
+        regex = /^(SSD|HDD)$/;
+        return Test(id, regex);
+      case "11":
+        regex = /^[A-Za-z0-9]*\s*[A-Za-z0-9]*\s[A-Za-z0-9]*\s[A-Za-z0-9]*$|^/;
+        return Test(id, regex);
+      case "12":
+        regex = /^[0-9]{1,2}GB$/;
+        return Test(id, regex);
+      case "13":
+        regex = /^[A-Za-z0-9]*\s[A-Za-z0-9.]*\s[A-Za-z0-9]*$|^brak\ssystemu$/;
+        return Test(id, regex);
+      case "14":
+        regex = /^(brak|Blu-Ray|DVD)$/;
+        return Test(id, regex);
     }
+
+    return true;
   };
 
   const updateData = () => {
@@ -138,8 +155,9 @@ function App() {
           setError(i + " " + j);
         } else {
           el.value = data[i][j];
-          setDefault(i + " " + j);
         }
+
+        setValidation(validateData(i + " " + j));
       }
     }
   };
@@ -169,6 +187,7 @@ function App() {
       }
     );
   };
+
   const getDataFromFields = () => {
     let array = [];
     for (let i = 0; i < data.length; i++) {
@@ -195,19 +214,30 @@ function App() {
   const putData = (filename) => {
     let array = getDataFromFields();
 
-    let lastValidation = false;
+    let lastValidation = true;
+    console.log(1, lastValidation, validation);
 
-    if (!validation) {
-      for (let i = 0; i < array.length; i++) {
-        for (let j = 0; j < 15; j++) {
-          lastValidation = validateData(i + " " + j);
-          if ((lastValidation = false)) break;
+    for (let i = 0; i < array.length; i++) {
+      for (let j = 0; j < 15; j++) {
+        lastValidation = validateData(i + " " + j);
+
+        console.log("LAST", lastValidation);
+        if (lastValidation === false) {
+          document.getElementById("PutERRORBox").style.visibility = "visible";
+          document.getElementById("PutERRORBox").innerHTML =
+            "Błąd w formularzu";
+          setValidation(lastValidation);
+
+          return 0;
         }
       }
     }
 
+    console.log(2, lastValidation, validation);
     if (lastValidation) {
-      setValidation(true);
+      setValidation(lastValidation);
+      document.getElementById("PutERRORBox").style.visibility = "hidden";
+      document.getElementById("PutERRORBox").innerHTML = "";
       console.log(array);
       Axios.post("http://localhost:3001/putData", {
         fileName: filename,
@@ -260,7 +290,14 @@ function App() {
             <div id="GetERRORBox"></div>
           </div>
           <div id="putField">
-            <input id="inputPut"></input>
+            <input
+              id="inputPut"
+              onChange={() => {
+                document.getElementById("PutERRORBox").style.visibility =
+                  "hidden";
+                document.getElementById("PutERRORBox").innerHTML = "";
+              }}
+            ></input>
             <button
               className="button"
               id="putSend"
