@@ -213,15 +213,11 @@ function App() {
 
   const putData = (filename) => {
     let array = getDataFromFields();
-
     let lastValidation = true;
-    console.log(1, lastValidation, validation);
 
     for (let i = 0; i < array.length; i++) {
       for (let j = 0; j < 15; j++) {
         lastValidation = validateData(i + " " + j);
-
-        console.log("LAST", lastValidation);
         if (lastValidation === false) {
           document.getElementById("PutERRORBox").style.visibility = "visible";
           document.getElementById("PutERRORBox").innerHTML =
@@ -233,12 +229,10 @@ function App() {
       }
     }
 
-    console.log(2, lastValidation, validation);
     if (lastValidation) {
       setValidation(lastValidation);
       document.getElementById("PutERRORBox").style.visibility = "hidden";
       document.getElementById("PutERRORBox").innerHTML = "";
-      console.log(array);
       Axios.post("http://localhost:3001/putData", {
         fileName: filename,
         data: array,

@@ -54,7 +54,6 @@ app.post("/putData", (req, res) => {
 
 const unifyData = (data, callback) => {
   let dataToSave = "";
-  console.log(data.data.length);
   for (let i = 0; i < data.data.length; i++) {
     let temp = "";
     for (let j = 0; j < 15; j++) {
