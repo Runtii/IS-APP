@@ -6,7 +6,6 @@ function App() {
   const [defaultData, setDefaultData] = useState([]);
   const [loadDefaultData] = useState("");
   const [data, setData] = useState([]);
-  const [validation, setValidation] = useState(true);
 
   useEffect(() => getDefaultData(), [loadDefaultData]);
 
@@ -54,7 +53,6 @@ function App() {
     let el = document.getElementById(id);
     if (!regex.test(el.value.toString())) {
       setError(id);
-      setValidation(false);
       return false;
     } else {
       setDefault(id);
@@ -82,10 +80,7 @@ function App() {
       el.value === null ||
       el.value === "Brak danych"
     ) {
-      {
-        setError(id);
-        setValidation(false);
-      }
+      setError(id);
       return false;
     }
     let regex;
@@ -95,7 +90,7 @@ function App() {
         regex = /^[A-Za-z]+$/;
         return Test(id, regex);
       case "1":
-        regex = /^[1-9]?[0-9]*\"$/;
+        regex = /^[1-9]?[0-9]*"$/;
         return Test(id, regex);
       case "2":
         regex = /^[1-9][0-9]{0,5}x[1-9][0-9]{0,5}$/;
@@ -136,9 +131,9 @@ function App() {
       case "14":
         regex = /^(brak|Blu-Ray|DVD)$/;
         return Test(id, regex);
+      default:
+        return true;
     }
-
-    return true;
   };
 
   const updateData = () => {
@@ -151,13 +146,12 @@ function App() {
           data[i][j] === null
         ) {
           el.value = "Brak danych";
-          setValidation(false);
           setError(i + " " + j);
         } else {
           el.value = data[i][j];
         }
 
-        setValidation(validateData(i + " " + j));
+        validateData(i + " " + j);
       }
     }
   };
@@ -222,15 +216,12 @@ function App() {
           document.getElementById("PutERRORBox").style.visibility = "visible";
           document.getElementById("PutERRORBox").innerHTML =
             "Błąd w formularzu";
-          setValidation(lastValidation);
-
           return 0;
         }
       }
     }
 
     if (lastValidation) {
-      setValidation(lastValidation);
       document.getElementById("PutERRORBox").style.visibility = "hidden";
       document.getElementById("PutERRORBox").innerHTML = "";
       Axios.post("http://localhost:3001/putData", {
