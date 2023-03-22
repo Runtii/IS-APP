@@ -6,7 +6,23 @@ function App() {
   const [defaultData, setDefaultData] = useState([]);
   const [loadDefaultData] = useState("");
   const [data, setData] = useState([]);
-
+  const names = [
+    "Producent",
+    "Wielkość matrycy",
+    "Rozdzielczość",
+    "Typ matrycy",
+    "Czy ekran jest dotykowy",
+    "Procesor",
+    "Liczba rdzeni",
+    "Taktowanie",
+    "Ram",
+    "Pojemność dysku",
+    "Typ dysku",
+    "Karta graficzna",
+    "Pamięć karty graficznej",
+    "System operacyjny",
+    "Napęd optyczny",
+  ];
   useEffect(() => getDefaultData(), [loadDefaultData]);
 
   useEffect(() => {
@@ -298,69 +314,43 @@ function App() {
           <table>
             <thead id="thead">
               <tr>
-                <th>Producent</th>
-                <th>Wielkość matrycy</th>
-                <th>Rozdzielczość</th>
-                <th>Typ matrycy</th>
-                <th>Czy ekran jest dotykowy</th>
-                <th>Procesor</th>
-                <th>Liczba rdzeni</th>
-                <th>Taktowanie</th>
-                <th>Ram</th>
-                <th>Pojemność dysku</th>
-                <th>Typ dysku</th>
-                <th>Karta graficzna</th>
-                <th>Pamięć karty graficznej</th>
-                <th>System operacyjny</th>
-                <th>Napęd optyczny</th>
+                {names.map((val, key) => {
+                  return <th key={key}>{val}</th>;
+                })}
               </tr>
             </thead>
-            <br />
+
             <tbody>
               {data.map((valMain, keyMain) => {
                 return (
-                  <>
-                    <tr key={keyMain}>
-                      {valMain.map((val, key) => {
-                        if (key === 15) {
-                          return;
-                        }
-                        return (
-                          <td>
-                            <textarea
-                              key={keyMain + " " + key}
-                              id={keyMain + " " + key}
-                              defaultValue={val ? val : "Brak danych"}
-                              onChange={() => {
-                                validateData(keyMain + " " + key);
-                              }}
-                            ></textarea>
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  </>
+                  <tr key={keyMain}>
+                    {valMain.map((val, key) => {
+                      if (key === 15) {
+                        return;
+                      }
+                      return (
+                        <td key={key}>
+                          <textarea
+                            key={keyMain + " " + key}
+                            id={keyMain + " " + key}
+                            defaultValue={val ? val : "Brak danych"}
+                            onChange={() => {
+                              validateData(keyMain + " " + key);
+                            }}
+                          ></textarea>
+                        </td>
+                      );
+                    })}
+                  </tr>
                 );
               })}
             </tbody>
-            <br />
+
             <tfoot id="tfoot">
               <tr>
-                <th>Producent</th>
-                <th>Wielkość matrycy</th>
-                <th>Rozdzielczość</th>
-                <th>Typ matrycy</th>
-                <th>Czy ekran jest dotykowy</th>
-                <th>Procesor</th>
-                <th>Liczba rdzeni</th>
-                <th>Taktowanie</th>
-                <th>Ram</th>
-                <th>Pojemność dysku</th>
-                <th>Typ dysku</th>
-                <th>Karta graficzna</th>
-                <th>Pamięć karty graficznej</th>
-                <th>System operacyjny</th>
-                <th>Napęd optyczny</th>
+                {names.map((val, key) => {
+                  return <th key={key}>{val}</th>;
+                })}
               </tr>
             </tfoot>
           </table>

@@ -107,3 +107,17 @@ input {
   margin-top: 20px;
   visibility: hidden;
 }
+
+tbody:before {
+  content: "@";
+  display: block;
+  line-height: 20px;
+  text-indent: -99999px;
+}
+
+tfoot:before {
+  content: "@";
+  display: block;
+  line-height: 20px;
+  text-indent: -99999px;
+}
