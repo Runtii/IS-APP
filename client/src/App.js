@@ -319,7 +319,6 @@ function App() {
                 })}
               </tr>
             </thead>
-
             <tbody>
               {data.map((valMain, keyMain) => {
                 return (
@@ -345,7 +344,6 @@ function App() {
                 );
               })}
             </tbody>
-
             <tfoot id="tfoot">
               <tr>
                 {names.map((val, key) => {
