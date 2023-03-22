@@ -317,160 +317,27 @@ function App() {
             </thead>
             <br />
             <tbody>
-              {data.map((val, key) => {
+              {data.map((valMain, keyMain) => {
                 return (
                   <>
-                    <tr key={key}>
-                      <td>
-                        <textarea
-                          key={key + " 0"}
-                          id={key + " 0"}
-                          defaultValue={val[0] ? val[0] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 0");
-                          }}
-                        ></textarea>
-                      </td>
-                      <td>
-                        <textarea
-                          key={key + " 1"}
-                          id={key + " 1"}
-                          defaultValue={val[1] ? val[1] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 1");
-                          }}
-                        ></textarea>
-                      </td>
-                      <td>
-                        <textarea
-                          key={key + " 2"}
-                          id={key + " 2"}
-                          defaultValue={val[2] ? val[2] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 2");
-                          }}
-                        ></textarea>
-                      </td>
-                      <td>
-                        <textarea
-                          key={key + " 3"}
-                          id={key + " 3"}
-                          defaultValue={val[3] ? val[3] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 3");
-                          }}
-                        ></textarea>
-                      </td>
-                      <td>
-                        <textarea
-                          key={key + " 4"}
-                          id={key + " 4"}
-                          defaultValue={val[4] ? val[4] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 4");
-                          }}
-                        ></textarea>
-                      </td>
-                      <td>
-                        <textarea
-                          key={key + " 5"}
-                          id={key + " 5"}
-                          defaultValue={val[5] ? val[5] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 5");
-                          }}
-                        ></textarea>
-                      </td>
-                      <td>
-                        <textarea
-                          key={key + " 6"}
-                          id={key + " 6"}
-                          defaultValue={val[6] ? val[6] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 6");
-                          }}
-                        ></textarea>
-                      </td>
-                      <td>
-                        <textarea
-                          key={key + " 7"}
-                          id={key + " 7"}
-                          defaultValue={val[7] ? val[7] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 7");
-                          }}
-                        ></textarea>
-                      </td>
-                      <td>
-                        <textarea
-                          key={key + " 8"}
-                          id={key + " 8"}
-                          defaultValue={val[8] ? val[8] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 8");
-                          }}
-                        ></textarea>
-                      </td>
-                      <td>
-                        <textarea
-                          key={key + " 9"}
-                          id={key + " 9"}
-                          defaultValue={val[9] ? val[9] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 9");
-                          }}
-                        ></textarea>
-                      </td>
-                      <td>
-                        <textarea
-                          key={key + " 10"}
-                          id={key + " 10"}
-                          defaultValue={val[10] ? val[10] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 10");
-                          }}
-                        ></textarea>
-                      </td>
-                      <td>
-                        <textarea
-                          key={key + " 11"}
-                          id={key + " 11"}
-                          defaultValue={val[11] ? val[11] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 11");
-                          }}
-                        ></textarea>
-                      </td>
-                      <td>
-                        <textarea
-                          key={key + " 12"}
-                          id={key + " 12"}
-                          defaultValue={val[12] ? val[12] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 12");
-                          }}
-                        ></textarea>
-                      </td>
-                      <td>
-                        <textarea
-                          key={key + " 13"}
-                          id={key + " 13"}
-                          defaultValue={val[13] ? val[13] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 13");
-                          }}
-                        ></textarea>
-                      </td>
-                      <td>
-                        <textarea
-                          key={key + " 14"}
-                          id={key + " 14"}
-                          defaultValue={val[14] ? val[14] : "Brak danych"}
-                          onChange={() => {
-                            validateData(key + " 14");
-                          }}
-                        ></textarea>
-                      </td>
+                    <tr key={keyMain}>
+                      {valMain.map((val, key) => {
+                        if (key === 15) {
+                          return;
+                        }
+                        return (
+                          <td>
+                            <textarea
+                              key={keyMain + " " + key}
+                              id={keyMain + " " + key}
+                              defaultValue={val ? val : "Brak danych"}
+                              onChange={() => {
+                                validateData(keyMain + " " + key);
+                              }}
+                            ></textarea>
+                          </td>
+                        );
+                      })}
                     </tr>
                   </>
                 );
