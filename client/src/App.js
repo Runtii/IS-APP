@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Axios from "axios";
 
 function App() {
-  const [defaultData, setDefaultData] = useState([]);
   const [loadDefaultData] = useState("");
   const [data, setData] = useState([]);
   const names = [
@@ -23,27 +22,12 @@ function App() {
     "System operacyjny",
     "Napęd optyczny",
   ];
-  useEffect(() => getDefaultData(), [loadDefaultData]);
-
-  useEffect(() => {
-    setData(defaultData);
-    updateData();
-  }, [defaultData]);
+  useEffect(() => getData("katalog"), [loadDefaultData]);
 
   useEffect(() => {
     console.log(data);
     updateData();
   }, [data]);
-
-  const getDefaultData = () => {
-    Axios.post("http://localhost:3001/getDefault", {
-      fileName: "katalog",
-    }).then((response) => {
-      if (response.data !== null) {
-        setDefaultData(response.data);
-      }
-    });
-  };
 
   const setError = (id) => {
     let el = document.getElementById(id);
@@ -99,6 +83,7 @@ function App() {
       setError(id);
       return false;
     }
+
     let regex;
 
     switch (row) {
