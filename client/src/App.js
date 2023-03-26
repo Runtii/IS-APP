@@ -22,7 +22,7 @@ function App() {
     "System operacyjny",
     "Napęd optyczny",
   ];
-  useEffect(() => getData("katalog"), [loadDefaultData]);
+  useEffect(() => getData("katalog", "txt"), [loadDefaultData]);
 
   useEffect(() => {
     console.log(data);
@@ -140,7 +140,6 @@ function App() {
   const updateData = () => {
     for (let i = 0; i < data.length; i++) {
       for (let j = 0; j < 15; j++) {
-        console.log(i + " " + j);
         let el = document.getElementById(i + " " + j);
         if (
           data[i][j] === "" ||
@@ -167,21 +166,21 @@ function App() {
     document.getElementById("GetERRORBox").innerHTML = "";
   };
 
-  const getData = (filename) => {
-    Axios.post("http://localhost:3001/getData", { fileName: filename }).then(
-      (response) => {
-        if (response.data !== null && !response.data.ERROR) {
-          setData(response.data);
-          console.log(response.data);
-        }
-
-        if (response.data.ERROR === "YES") {
-          document.getElementById("GetERRORBox").style.visibility = "visible";
-          document.getElementById("GetERRORBox").innerHTML =
-            "Plik nie istnieje";
-        }
+  const getData = (filename, fileType) => {
+    Axios.post("http://localhost:3001/getData", {
+      fileName: filename,
+      fileType: fileType,
+    }).then((response) => {
+      if (response.data !== null && !response.data.ERROR) {
+        setData(response.data);
+        console.log(response.data);
       }
-    );
+
+      if (response.data.ERROR === "YES") {
+        document.getElementById("GetERRORBox").style.visibility = "visible";
+        document.getElementById("GetERRORBox").innerHTML = "Plik nie istnieje";
+      }
+    });
   };
 
   const getDataFromFields = () => {
@@ -226,8 +225,10 @@ function App() {
     if (lastValidation) {
       document.getElementById("PutERRORBox").style.visibility = "hidden";
       document.getElementById("PutERRORBox").innerHTML = "";
+      let typeOfFile = document.getElementById("typePut").value;
       Axios.post("http://localhost:3001/putData", {
         fileName: filename,
+        fileType: typeOfFile,
         data: array,
       }).then((response) => {
         if (response !== null) console.log(response);
@@ -278,7 +279,12 @@ function App() {
             <button
               className="button"
               id="getSend"
-              onClick={() => getData(document.getElementById("inputGet").value)}
+              onClick={() =>
+                getData(
+                  document.getElementById("inputGet").value,
+                  document.getElementById("typeGet").value
+                )
+              }
             >
               Pobierz dane
             </button>
