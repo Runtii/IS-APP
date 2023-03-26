@@ -108,6 +108,16 @@ input {
   visibility: hidden;
 }
 
+#typeGet,
+#typePut {
+  margin-right: 30px;
+  padding: 20px;
+  background-color: rgba(0, 30, 71, 0.212);
+  color: rgb(255, 255, 255);
+  border: solid rgba(1, 24, 59, 0.137);
+  border-radius: 10px;
+}
+
 tbody:before {
   content: "@";
   display: block;

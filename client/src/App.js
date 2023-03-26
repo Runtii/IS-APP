@@ -257,7 +257,7 @@ function App() {
             Zapisz dane do pliku TXT
           </button>
         </div>
-        <div className="container">
+        <div className="container" id="hiddenOptions">
           <div id="getField">
             <input
               id="inputGet"
@@ -267,6 +267,14 @@ function App() {
                   "hidden";
               }}
             ></input>
+            <select name="fileType" id="typeGet">
+              <option value="txt" className="options">
+                TXT
+              </option>
+              <option value="xml" className="options">
+                XML
+              </option>
+            </select>
             <button
               className="button"
               id="getSend"
@@ -285,6 +293,10 @@ function App() {
                 document.getElementById("PutERRORBox").innerHTML = "";
               }}
             ></input>
+            <select name="fileType" id="typePut">
+              <option value="txt">TXT</option>
+              <option value="xml">XML</option>
+            </select>
             <button
               className="button"
               id="putSend"
