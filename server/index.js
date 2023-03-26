@@ -70,7 +70,46 @@ const convertToTXT = (data, callback) => {
 };
 
 const convertToXML = (data, callback) => {
+  const names = [
+    "Producent",
+    "Wielkość_matrycy",
+    "Rozdzielczość",
+    "Typ_matrycy",
+    "Czy_ekran_jest_dotykowy",
+    "Procesor",
+    "Liczba_rdzeni",
+    "Taktowanie",
+    "Ram",
+    "Pojemność_dysku",
+    "Typ_dysku",
+    "Karta_graficzna",
+    "Pamięć_karty_graficznej",
+    "System_operacyjny",
+    "Napęd_optyczny",
+  ];
+
   let dataToSave = "";
+
+  names.map((rowMain, keyMain) => {
+    dataToSave += `<specyfikacja_${keyMain}>
+${names
+  .map((name, key) => {
+    if (key === 14 && name === "") return `  <${name}/>`;
+
+    if (key === 14)
+      return `  <${name}>
+    ${data.data[keyMain][key]}
+  </${name}>`;
+
+    if (name === "") return `  <${name}/>\n`;
+
+    return `  <${name}>
+    ${data.data[keyMain][key]}
+  </${name}>\n`;
+  })
+  .join("")}
+</specyfikacja_${keyMain}>\n`;
+  });
 
   //https://developer.mozilla.org/en-US/docs/Web/API/Document_object_model/How_to_create_a_DOM_tree
   //https://developer.mozilla.org/en-US/docs/Web/Guide/Parsing_and_serializing_XML
