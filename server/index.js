@@ -32,7 +32,6 @@ app.listen(PORT, () => {
 
 app.post("/getData", (req, res) => {
   if (req.body != null) {
-    console.log(req.body.fileName, req.body.fileType);
     readFromFile(req.body.fileName, req.body.fileType, function (data) {
       res.send(data);
     });
@@ -61,7 +60,6 @@ const getFromTXT = (rawData) => {
  */
 const getFromXML = (rawData) => {
   let array = [];
-  const names = namesList;
 
   const dom = new JSDOM.JSDOM("");
   const DOMParser = dom.window.DOMParser;

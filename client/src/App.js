@@ -279,7 +279,15 @@ function App() {
                   "hidden";
               }}
             ></input>
-            <select name="fileType" id="typeGet">
+            <select
+              name="fileType"
+              id="typeGet"
+              onChange={() => {
+                document.getElementById("GetERRORBox").innerHTML = "";
+                document.getElementById("GetERRORBox").style.visibility =
+                  "hidden";
+              }}
+            >
               <option value="txt" className="options">
                 TXT
               </option>
@@ -310,7 +318,15 @@ function App() {
                 document.getElementById("PutERRORBox").innerHTML = "";
               }}
             ></input>
-            <select name="fileType" id="typePut">
+            <select
+              name="fileType"
+              id="typePut"
+              onChange={() => {
+                document.getElementById("GetERRORBox").innerHTML = "";
+                document.getElementById("GetERRORBox").style.visibility =
+                  "hidden";
+              }}
+            >
               <option value="txt">TXT</option>
               <option value="xml">XML</option>
             </select>
