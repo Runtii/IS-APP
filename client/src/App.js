@@ -171,12 +171,23 @@ function App() {
       fileName: filename,
       fileType: fileType,
     }).then((response) => {
-      if (response.data !== null && !response.data.ERROR) {
+      console.log(response.data);
+      if (
+        response.data !== null &&
+        !response.data.ERROR &&
+        response.data !== undefined &&
+        response.data !== ""
+      ) {
         setData(response.data);
         console.log(response.data);
       }
 
-      if (response.data.ERROR === "YES") {
+      if (
+        response.data.ERROR === "YES" ||
+        response.data === null ||
+        response.data === undefined ||
+        response.data === ""
+      ) {
         document.getElementById("GetERRORBox").style.visibility = "visible";
         document.getElementById("GetERRORBox").innerHTML = "Plik nie istnieje";
       }
@@ -248,14 +259,14 @@ function App() {
             id="GetButton"
             onClick={() => showGetField()}
           >
-            Wczytaj dane z pliku TXT
+            Wczytaj dane z pliku
           </button>
           <button
             className="button"
             id="PutButton"
             onClick={() => showPutField()}
           >
-            Zapisz dane do pliku TXT
+            Zapisz dane do pliku
           </button>
         </div>
         <div className="container" id="hiddenOptions">
