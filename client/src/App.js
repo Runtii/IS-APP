@@ -59,7 +59,7 @@ function App() {
       return true;
     }
   };
-
+  //If there will be more than 100 records it will break [NEED FIX]
   const validateData = (id) => {
     let el = document.getElementById(id);
 
