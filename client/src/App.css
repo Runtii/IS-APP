@@ -131,3 +131,12 @@ tfoot:before {
   line-height: 20px;
   text-indent: -99999px;
 }
+
+.status {
+  height: 0%;
+  width: 0%;
+}
+
+.thead {
+  padding: 5px 10px 5px 10px;
+}

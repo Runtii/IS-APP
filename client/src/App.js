@@ -1,11 +1,13 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import Axios from "axios";
+import modified from "./graphics/modified.png";
 
 function App() {
   const [loadDefaultData] = useState("");
   const [data, setData] = useState([]);
   const names = [
+    "Status",
     "Producent",
     "Wielkość matrycy",
     "Rozdzielczość",
@@ -345,14 +347,21 @@ function App() {
             <thead id="thead">
               <tr>
                 {names.map((val, key) => {
-                  return <th key={key}>{val}</th>;
+                  return (
+                    <th className="thead" key={key}>
+                      {val}
+                    </th>
+                  );
                 })}
               </tr>
             </thead>
             <tbody>
               {data.map((valMain, keyMain) => {
                 return (
-                  <tr key={keyMain}>
+                  <tr key={keyMain} id={"record" + keyMain}>
+                    <td className="status" id={"status" + keyMain}>
+                      <img src={modified} />
+                    </td>
                     {valMain.map((val, key) => {
                       if (key === 15) {
                         return;
