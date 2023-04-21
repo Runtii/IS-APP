@@ -77,7 +77,6 @@ function App() {
     } else if (id.length === 5) {
       row += el.id[3] + "" + el.id[4];
     }
-
     if (
       el.value === "" ||
       el.value === undefined ||
@@ -145,6 +144,8 @@ function App() {
     for (let i = 0; i < data.length; i++) {
       for (let j = 0; j < 15; j++) {
         let el = document.getElementById(i + " " + j);
+        let status = document.getElementById("status" + i);
+
         if (
           data[i][j] === "" ||
           data[i][j] === undefined ||
@@ -154,8 +155,8 @@ function App() {
           setError(i + " " + j);
         } else {
           el.value = data[i][j];
+          status.src = other;
         }
-
         validateData(i + " " + j);
       }
     }
@@ -182,7 +183,10 @@ function App() {
         response.data !== undefined &&
         response.data !== ""
       ) {
-        setData(response.data);
+        if (fileType === "dataBase") {
+        } else {
+          setData(response.data);
+        }
         console.log(response.data);
       }
 
@@ -255,7 +259,7 @@ function App() {
   };
 
   const statusBar = (id) => {
-    return <img src={modified} />;
+    return <img id={id} src={other} />;
   };
 
   return (
@@ -302,6 +306,9 @@ function App() {
               <option value="xml" className="options">
                 XML
               </option>
+              <option value="dataBase" className="options">
+                Baza danych
+              </option>
             </select>
             <button
               className="button"
@@ -337,6 +344,7 @@ function App() {
             >
               <option value="txt">TXT</option>
               <option value="xml">XML</option>
+              <option value="dataBase">Baza danych</option>
             </select>
             <button
               className="button"
@@ -365,9 +373,7 @@ function App() {
               {data.map((valMain, keyMain) => {
                 return (
                   <tr key={keyMain} id={"record" + keyMain}>
-                    <td className="status" id={"status" + keyMain}>
-                      {statusBar("status" + keyMain)}
-                    </td>
+                    <td className="status">{statusBar("status" + keyMain)}</td>
                     {valMain.map((val, key) => {
                       if (key === 15) {
                         return;
@@ -380,6 +386,10 @@ function App() {
                             defaultValue={val ? val : "Brak danych"}
                             onChange={() => {
                               validateData(keyMain + " " + key);
+                              let status = document.getElementById(
+                                "status" + keyMain
+                              );
+                              status.src = modified;
                             }}
                           ></textarea>
                         </td>

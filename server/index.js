@@ -84,13 +84,16 @@ const getFromXML = (rawData) => {
 };
 
 const readFromFile = (fileName, fileType, callback) => {
-  fs.readFile("files/" + fileName + "." + fileType, (err, data) => {
-    if (err) return callback({ ERROR: "YES", response: "ERROR -" + err });
-    let array;
-    if (fileType === "txt") array = getFromTXT(data);
-    else array = getFromXML(data);
-    return callback(array);
-  });
+  if (fileType === "dataBase") {
+  } else {
+    fs.readFile("files/" + fileName + "." + fileType, (err, data) => {
+      if (err) return callback({ ERROR: "YES", response: "ERROR -" + err });
+      let array;
+      if (fileType === "txt") array = getFromTXT(data);
+      else array = getFromXML(data);
+      return callback(array);
+    });
+  }
 };
 
 app.post("/putData", (req, res) => {
