@@ -2,6 +2,8 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import Axios from "axios";
 import modified from "./graphics/modified.png";
+import other from "./graphics/other.png";
+import duplicate from "./graphics/duplicate.png";
 
 function App() {
   const [loadDefaultData] = useState("");
@@ -252,6 +254,10 @@ function App() {
     }
   };
 
+  const statusBar = (id) => {
+    return <img src={modified} />;
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -360,7 +366,7 @@ function App() {
                 return (
                   <tr key={keyMain} id={"record" + keyMain}>
                     <td className="status" id={"status" + keyMain}>
-                      <img src={modified} />
+                      {statusBar("status" + keyMain)}
                     </td>
                     {valMain.map((val, key) => {
                       if (key === 15) {
