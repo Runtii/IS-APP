@@ -102,10 +102,11 @@ app.post("/putData", (req, res) => {
       convertToTXT(req.body, function (response) {
         res.send(response);
       });
-    else {
+    else if (req.body.fileType === "xml") {
       convertToXML(req.body, function (response) {
         res.send(response);
       });
+    } else if (req.body.fileType === "dataBase") {
     }
   }
   return 0;
