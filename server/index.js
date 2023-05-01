@@ -107,6 +107,7 @@ const getFromDB = (callback) => {
         let tempRow = [];
         names.map((name) => {
           console.log(1, name, val[name]);
+
           tempRow.push(val[name]);
         });
         tempArray.push(tempRow);
@@ -217,9 +218,9 @@ const saveToDB = (data, callback) => {
       [val],
       (err, res) => {
         if (err) {
-          if (err) callback({ response: "ERROR - " + err });
+          if (err) return callback({ response: "ERROR - " + err });
         } else {
-          callback({ response: "OK" });
+          return callback({ response: "OK" });
         }
       }
     );
@@ -231,14 +232,17 @@ app.post("/putData", (req, res) => {
     if (req.body.fileType === "txt")
       convertToTXT(req.body, function (response) {
         res.send(response);
+        return 0;
       });
     else if (req.body.fileType === "xml") {
       convertToXML(req.body, function (response) {
         res.send(response);
+        return 0;
       });
     } else if (req.body.fileType === "dataBase") {
       saveToDB(req.body, function (response) {
         res.send(response);
+        return 0;
       });
     }
   }

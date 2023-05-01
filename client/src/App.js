@@ -28,13 +28,15 @@ function App() {
     "Napęd optyczny",
   ];
   const [status, setStatus] = useState([]);
-  const [dataLength, setDataLength] = useState(24);
-
+  const [dbFlow, setDBFlow] = useState(false);
+  const [duplicateCount, setDuplicate] = useState(0);
+  const [fromDBCount, setFromDBCount] = useState(0);
   useEffect(() => getData("katalog", "txt"), [loadDefaultData]);
 
   useEffect(() => {
-    setDataLength(data.length);
-    updateData();
+    if (!dbFlow) {
+      updateData();
+    }
   }, [data]);
 
   const setError = (id) => {
@@ -155,26 +157,25 @@ function App() {
   };
 
   const updateData = () => {
-    if (data.length === dataLength)
-      for (let i = 0; i < data.length; i++) {
-        for (let j = 1; j < 16; j++) {
-          let el = document.getElementById(i + " " + j);
-          let status = document.getElementById("status" + i);
+    for (let i = 0; i < data.length; i++) {
+      for (let j = 1; j < 16; j++) {
+        let el = document.getElementById(i + " " + j);
+        let status = document.getElementById("status" + i);
 
-          if (
-            data[i][j] === "" ||
-            data[i][j] === undefined ||
-            data[i][j] === null
-          ) {
-            el.value = "Brak danych";
-            setError(i + " " + j);
-          } else {
-            el.value = data[i][j];
-            status.src = other;
-          }
-          validateData(i + " " + j);
+        if (
+          data[i][j] === "" ||
+          data[i][j] === undefined ||
+          data[i][j] === null
+        ) {
+          el.value = "Brak danych";
+          setError(i + " " + j);
+        } else {
+          el.value = data[i][j];
+          status.src = other;
         }
+        validateData(i + " " + j);
       }
+    }
   };
 
   const showGetField = () => {
@@ -186,30 +187,42 @@ function App() {
     document.getElementById("GetERRORBox").innerHTML = "";
   };
 
+  const testIfDuplicate = (keyDB, valDB) => {
+    for (let i = 1; i < 16; i++) {
+      let el = document.getElementById(keyDB + " " + i);
+
+      if (valDB[i].toString() === el.value.toString()) {
+        if (i === 15) return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
   const appendFromDatabase = (dataFromDB) => {
-    console.log("danewfunkcji", dataFromDB);
-    let tempArray = [];
-    let tempStatus = [];
+    let fromDBCounted = 0;
+    let duplicatesCounted = 0;
+
     dataFromDB.map((valDB, keyDB) => {
+      let ifDuplicateMain = false;
+      valDB.unshift(fromDB);
       data.map((val, key) => {
-        if (valDB[1] === val[1]) {
-          for (let i = 1; i <= 16; i++) {
-            if (!valDB[i] === val[i]) {
-              break;
-            } else {
-              let status = document.getElementById("status" + key);
-              if (i === 16) status.src = duplicate;
-            }
-          }
-        } else {
-          tempArray.push(valDB);
-          tempStatus.push(fromDB);
+        let ifDuplicate = testIfDuplicate(key, valDB);
+        if (ifDuplicate) {
+          ifDuplicateMain = true;
+          let status = document.getElementById("status" + key);
+          status.src = duplicate;
+          duplicatesCounted++;
+          setDuplicate(duplicatesCounted);
         }
       });
+      if (!ifDuplicateMain) {
+        fromDBCounted++;
+        setFromDBCount(fromDBCounted);
+        setData((prevData) => [...prevData, valDB]);
+        setStatus((prevStatus) => [...prevStatus, fromDB]);
+      }
     });
-
-    setData(...data, ...tempArray);
-    setStatus(...status, ...tempStatus);
   };
 
   const getData = (filename, fileType) => {
@@ -226,15 +239,20 @@ function App() {
       ) {
         if (fileType === "dataBase") {
           appendFromDatabase(response.data);
-
-          console.log("funckja", data);
-          console.log("funckja", status);
+          setDBFlow(true);
+          console.log("funckja data", data);
+          console.log("funckja status", status);
+          console.log("duplicate:", duplicateCount, "fromDB:", fromDBCount);
         } else {
           let statusTemp = [];
           response.data.map((val, key) => {
             val.unshift(other);
+
             statusTemp.push(other);
           });
+          setDuplicate(0);
+          setFromDBCount(0);
+          setDBFlow(false);
           setData(response.data);
           setStatus(statusTemp);
         }
@@ -345,8 +363,6 @@ function App() {
     return <img id={id} src={source} alt="status" />;
   };
 
-  const updateStatus = () => {};
-
   return (
     <div className="App">
       <header className="App-header">
@@ -455,8 +471,8 @@ function App() {
               </tr>
             </thead>
             <tbody>
+              {console.log("data", data)}
               {data.map((valMain, keyMain) => {
-                console.log(valMain);
                 return (
                   <tr key={keyMain} id={"record" + keyMain}>
                     {valMain.map((val, key) => {
@@ -482,10 +498,10 @@ function App() {
                                   keyMain + " " + key
                                 ).value;
                                 if (value === val) {
-                                  let status = document.getElementById(
+                                  let statusIndicator = document.getElementById(
                                     "status" + keyMain
                                   );
-                                  status.src = other;
+                                  statusIndicator.src = status[keyMain];
                                 } else {
                                   let status = document.getElementById(
                                     "status" + keyMain
@@ -510,6 +526,10 @@ function App() {
             </tfoot>
           </table>
         </div>
+        <div id="DBCount">
+          Zaimportowano {fromDBCount} rekordy(-ów) z bazy danych
+        </div>
+        <div id="DBDuplicates">Znaleziono {duplicateCount} duplikaty(-ów)</div>
       </header>
       <br />
     </div>

@@ -29,6 +29,12 @@ th {
 td {
   width: 80px;
   text-overflow: wrap;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 textarea {
@@ -139,4 +145,13 @@ tfoot:before {
 
 .thead {
   padding: 5px 10px 5px 10px;
+}
+
+#DBCount,
+#DBDuplicates {
+  font-size: x-large;
+  margin: 0px 0px 20px 0px;
+  color: rgb(255, 255, 255);
+  text-shadow: -1px -1px 0 rgb(0, 0, 0), 1px -1px 0 rgb(0, 0, 0),
+    -1px 1px 0 rgb(0, 0, 0), 1px 1px 0 rgb(0, 0, 0);
 }
