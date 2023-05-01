@@ -82,6 +82,11 @@ textarea::selection {
   scale: 0.9;
 }
 
+#GetButton,
+#PutButton {
+  margin: 30px 325px 0px 320px;
+}
+
 input {
   padding: 20px;
   margin-right: 30px;

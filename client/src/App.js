@@ -27,7 +27,7 @@ function App() {
     "System operacyjny",
     "Napęd optyczny",
   ];
-  const [status, setStatus] = useState([]);
+  const [statusArray, setStatus] = useState([]);
   const [dbFlow, setDBFlow] = useState(false);
   const [duplicateCount, setDuplicate] = useState(0);
   const [fromDBCount, setFromDBCount] = useState(0);
@@ -211,8 +211,13 @@ function App() {
         if (ifDuplicate) {
           ifDuplicateMain = true;
           let status = document.getElementById("status" + key);
-          status.src = duplicate;
-          duplicatesCounted++;
+          if (status.src !== duplicate) {
+            status.src = duplicate;
+            duplicatesCounted++;
+            let newStatusDuplicates = statusArray;
+            newStatusDuplicates[key] = duplicate;
+            setStatus(newStatusDuplicates);
+          }
           setDuplicate(duplicatesCounted);
         }
       });
@@ -241,7 +246,7 @@ function App() {
           appendFromDatabase(response.data);
           setDBFlow(true);
           console.log("funckja data", data);
-          console.log("funckja status", status);
+          console.log("funckja status", statusArray);
           console.log("duplicate:", duplicateCount, "fromDB:", fromDBCount);
         } else {
           let statusTemp = [];
@@ -328,7 +333,7 @@ function App() {
     document.getElementById("PutERRORBox").innerHTML = "";
 
     if (lastValidation) {
-      Axios.post("http://localhost:3001/putData", {
+      Axios.put("http://localhost:3001/putData", {
         fileName: filename,
         fileType: typeOfFile,
         data: array,
@@ -407,9 +412,6 @@ function App() {
               <option value="xml" className="options">
                 XML
               </option>
-              <option value="dataBase" className="options">
-                Baza danych
-              </option>
             </select>
             <button
               className="button"
@@ -422,6 +424,13 @@ function App() {
               }
             >
               Pobierz dane
+            </button>
+            <button
+              className="button"
+              id="getSendDB"
+              onClick={() => getData("", "dataBase")}
+            >
+              Pobierz dane z Bazy Danych
             </button>
             <div id="GetERRORBox"></div>
           </div>
@@ -445,7 +454,6 @@ function App() {
             >
               <option value="txt">TXT</option>
               <option value="xml">XML</option>
-              <option value="dataBase">Baza danych</option>
             </select>
             <button
               className="button"
@@ -453,6 +461,13 @@ function App() {
               onClick={() => putData(document.getElementById("inputPut").value)}
             >
               Wyślij dane
+            </button>
+            <button
+              className="button"
+              id="putSendDB"
+              onClick={() => putData("dataBase")}
+            >
+              Wyślij dane do Bazy danych
             </button>
             <div id="PutERRORBox"></div>
           </div>
@@ -501,7 +516,7 @@ function App() {
                                   let statusIndicator = document.getElementById(
                                     "status" + keyMain
                                   );
-                                  statusIndicator.src = status[keyMain];
+                                  statusIndicator.src = statusArray[keyMain];
                                 } else {
                                   let status = document.getElementById(
                                     "status" + keyMain

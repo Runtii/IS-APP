@@ -106,8 +106,6 @@ const getFromDB = (callback) => {
       res.map((val) => {
         let tempRow = [];
         names.map((name) => {
-          console.log(1, name, val[name]);
-
           tempRow.push(val[name]);
         });
         tempArray.push(tempRow);
@@ -210,24 +208,36 @@ ${names
   });
 };
 
-const saveToDB = (data, callback) => {
-  console.log(data.data);
-  data.data.map((val, key) => {
-    db.query(
-      "INSERT INTO specyfikacja (Producent, Wielkość_matrycy, Rozdzielczość, Typ_matrycy, Czy_ekran_jest_dotykowy, Procesor, Liczba_rdzeni, Taktowanie, Ram, Pojemność_dysku, Typ_dysku, Karta_graficzna, Pamięć_karty_graficznej, System_operacyjny, Napęd_optyczny) VALUES (?)",
-      [val],
-      (err, res) => {
-        if (err) {
-          if (err) return callback({ response: "ERROR - " + err });
-        } else {
-          return callback({ response: "OK" });
-        }
-      }
-    );
+const findUniqueData = (data, callback) => {
+  let positionArray = [];
+  getFromDB(function (callbackDataFromDB) {
+    positionArray = data.filter(function (obj) {
+      return callbackDataFromDB.indexOf(obj) == -1;
+    });
+    console.log(1, positionArray);
+    return callback(positionArray);
   });
 };
 
-app.post("/putData", (req, res) => {
+const saveToDB = (data, callback) => {
+  findUniqueData(data, function (dataToSaveArray) {
+    console.log(2, dataToSaveArray);
+    dataToSaveArray.map((dataToSave) => {
+      db.query(
+        "INSERT INTO specyfikacja (Producent, Wielkość_matrycy, Rozdzielczość, Typ_matrycy, Czy_ekran_jest_dotykowy, Procesor, Liczba_rdzeni, Taktowanie, Ram, Pojemność_dysku, Typ_dysku, Karta_graficzna, Pamięć_karty_graficznej, System_operacyjny, Napęd_optyczny) VALUES (?)",
+        [dataToSave],
+        (err, res) => {
+          if (err) {
+            if (err) return callback({ response: "ERROR - " + err });
+          }
+        }
+      );
+    });
+    return callback({ response: "OK" });
+  });
+};
+
+app.put("/putData", (req, res) => {
   if (req.body != null) {
     if (req.body.fileType === "txt")
       convertToTXT(req.body, function (response) {
@@ -240,7 +250,7 @@ app.post("/putData", (req, res) => {
         return 0;
       });
     } else if (req.body.fileType === "dataBase") {
-      saveToDB(req.body, function (response) {
+      saveToDB(req.body.data, function (response) {
         res.send(response);
         return 0;
       });
