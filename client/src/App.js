@@ -4,6 +4,7 @@ import Axios from "axios";
 import modified from "./graphics/modified.png";
 import other from "./graphics/other.png";
 import duplicate from "./graphics/duplicate.png";
+import fromDB from "./graphics/fromDB.png";
 
 function App() {
   const [loadDefaultData] = useState("");
@@ -26,10 +27,13 @@ function App() {
     "System operacyjny",
     "Napęd optyczny",
   ];
+  const [status, setStatus] = useState([]);
+  const [dataLength, setDataLength] = useState(24);
+
   useEffect(() => getData("katalog", "txt"), [loadDefaultData]);
 
   useEffect(() => {
-    console.log(data);
+    setDataLength(data.length);
     updateData();
   }, [data]);
 
@@ -151,25 +155,26 @@ function App() {
   };
 
   const updateData = () => {
-    for (let i = 0; i < data.length; i++) {
-      for (let j = 1; j < 16; j++) {
-        let el = document.getElementById(i + " " + j);
-        let status = document.getElementById("status" + i);
+    if (data.length === dataLength)
+      for (let i = 0; i < data.length; i++) {
+        for (let j = 1; j < 16; j++) {
+          let el = document.getElementById(i + " " + j);
+          let status = document.getElementById("status" + i);
 
-        if (
-          data[i][j] === "" ||
-          data[i][j] === undefined ||
-          data[i][j] === null
-        ) {
-          el.value = "Brak danych";
-          setError(i + " " + j);
-        } else {
-          el.value = data[i][j];
-          status.src = other;
+          if (
+            data[i][j] === "" ||
+            data[i][j] === undefined ||
+            data[i][j] === null
+          ) {
+            el.value = "Brak danych";
+            setError(i + " " + j);
+          } else {
+            el.value = data[i][j];
+            status.src = other;
+          }
+          validateData(i + " " + j);
         }
-        validateData(i + " " + j);
       }
-    }
   };
 
   const showGetField = () => {
@@ -182,8 +187,9 @@ function App() {
   };
 
   const appendFromDatabase = (dataFromDB) => {
+    console.log("danewfunkcji", dataFromDB);
     let tempArray = [];
-
+    let tempStatus = [];
     dataFromDB.map((valDB, keyDB) => {
       data.map((val, key) => {
         if (valDB[1] === val[1]) {
@@ -197,10 +203,13 @@ function App() {
           }
         } else {
           tempArray.push(valDB);
+          tempStatus.push(fromDB);
         }
       });
     });
+
     setData(...data, ...tempArray);
+    setStatus(...status, ...tempStatus);
   };
 
   const getData = (filename, fileType) => {
@@ -217,14 +226,18 @@ function App() {
       ) {
         if (fileType === "dataBase") {
           appendFromDatabase(response.data);
+
+          console.log("funckja", data);
+          console.log("funckja", status);
         } else {
-          let array = [];
+          let statusTemp = [];
           response.data.map((val, key) => {
-            array.push(val.unshift(other));
+            val.unshift(other);
+            statusTemp.push(other);
           });
           setData(response.data);
+          setStatus(statusTemp);
         }
-        console.log(response.data);
       }
 
       if (
@@ -331,6 +344,8 @@ function App() {
   const statusBar = (id, source) => {
     return <img id={id} src={source} alt="status" />;
   };
+
+  const updateStatus = () => {};
 
   return (
     <div className="App">
@@ -441,6 +456,7 @@ function App() {
             </thead>
             <tbody>
               {data.map((valMain, keyMain) => {
+                console.log(valMain);
                 return (
                   <tr key={keyMain} id={"record" + keyMain}>
                     {valMain.map((val, key) => {
@@ -462,10 +478,20 @@ function App() {
                               defaultValue={val ? val : "Brak danych"}
                               onChange={() => {
                                 validateData(keyMain + " " + key);
-                                let status = document.getElementById(
-                                  "status" + keyMain
-                                );
-                                status.src = modified;
+                                let value = document.getElementById(
+                                  keyMain + " " + key
+                                ).value;
+                                if (value === val) {
+                                  let status = document.getElementById(
+                                    "status" + keyMain
+                                  );
+                                  status.src = other;
+                                } else {
+                                  let status = document.getElementById(
+                                    "status" + keyMain
+                                  );
+                                  status.src = modified;
+                                }
                               }}
                             ></textarea>
                           </td>

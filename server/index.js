@@ -3,11 +3,20 @@ const app = express();
 const PORT = 3001;
 const cors = require("cors");
 const fs = require("fs");
-const { raw } = require("mysql");
 const JSDOM = require("jsdom");
+
+const mysql = require("mysql");
+
+const db = mysql.createConnection({
+  user: "root",
+  host: "localhost",
+  password: "Password",
+  database: "integracjasystemow",
+});
 
 app.use(cors());
 app.use(express.json());
+
 const namesList = [
   "Producent",
   "Wielkość_matrycy",
@@ -25,18 +34,6 @@ const namesList = [
   "System_operacyjny",
   "Napęd_optyczny",
 ];
-//sets up app on given port(3001)
-app.listen(PORT, () => {
-  console.log("Server is running");
-});
-
-app.post("/getData", (req, res) => {
-  if (req.body != null) {
-    readFromFile(req.body.fileName, req.body.fileType, function (data) {
-      res.send(data);
-    });
-  }
-});
 
 /**
  * Parse raw txt data into 2D array
@@ -83,35 +80,74 @@ const getFromXML = (rawData) => {
   return array;
 };
 
+const getFromDB = (callback) => {
+  db.query("SELECT * FROM specyfikacja", (err, res) => {
+    if (err) {
+      return callback({ response: "ERROR" + err });
+    } else {
+      let tempArray = [];
+      let names = [
+        "Producent",
+        "Wielkość_matrycy",
+        "Rozdzielczość",
+        "Typ_matrycy",
+        "Czy_ekran_jest_dotykowy",
+        "Procesor",
+        "Liczba_rdzeni",
+        "Taktowanie",
+        "Ram",
+        "Pojemność_dysku",
+        "Typ_dysku",
+        "Karta_graficzna",
+        "Pamięć_karty_graficznej",
+        "System_operacyjny",
+        "Napęd_optyczny",
+      ];
+      res.map((val) => {
+        let tempRow = [];
+        names.map((name) => {
+          console.log(1, name, val[name]);
+          tempRow.push(val[name]);
+        });
+        tempArray.push(tempRow);
+      });
+      return callback(tempArray);
+    }
+  });
+};
+
 const readFromFile = (fileName, fileType, callback) => {
   if (fileType === "dataBase") {
+    getFromDB(function (data) {
+      console.log(data);
+      return callback(data);
+    });
   } else {
     fs.readFile("files/" + fileName + "." + fileType, (err, data) => {
       if (err) return callback({ ERROR: "YES", response: "ERROR -" + err });
       let array;
       if (fileType === "txt") array = getFromTXT(data);
       else array = getFromXML(data);
+      console.log(array);
       return callback(array);
     });
   }
 };
 
-app.post("/putData", (req, res) => {
+app.post("/getData", (req, res) => {
   if (req.body != null) {
-    if (req.body.fileType === "txt")
-      convertToTXT(req.body, function (response) {
-        res.send(response);
-      });
-    else if (req.body.fileType === "xml") {
-      convertToXML(req.body, function (response) {
-        res.send(response);
-      });
-    } else if (req.body.fileType === "dataBase") {
-    }
+    readFromFile(req.body.fileName, req.body.fileType, function (data) {
+      res.send(data);
+    });
   }
-  return 0;
 });
 
+const saveToFile = (filename, fileType, data, callback) => {
+  fs.writeFile("files/" + filename + "." + fileType, data, (err) => {
+    if (err) callback({ response: "ERROR - " + err });
+    return callback({ response: "zapisano" });
+  });
+};
 /**
  * serializes data from front-end fields into txt format
  *
@@ -173,11 +209,45 @@ ${names
   });
 };
 
-const saveToFile = (filename, fileType, data, callback) => {
-  fs.writeFile("files/" + filename + "." + fileType, data, (err) => {
-    if (err) callback({ response: "ERROR - " + err });
-    return callback({ response: "zapisano" });
+const saveToDB = (data, callback) => {
+  console.log(data.data);
+  data.data.map((val, key) => {
+    db.query(
+      "INSERT INTO specyfikacja (Producent, Wielkość_matrycy, Rozdzielczość, Typ_matrycy, Czy_ekran_jest_dotykowy, Procesor, Liczba_rdzeni, Taktowanie, Ram, Pojemność_dysku, Typ_dysku, Karta_graficzna, Pamięć_karty_graficznej, System_operacyjny, Napęd_optyczny) VALUES (?)",
+      [val],
+      (err, res) => {
+        if (err) {
+          if (err) callback({ response: "ERROR - " + err });
+        } else {
+          callback({ response: "OK" });
+        }
+      }
+    );
   });
 };
+
+app.post("/putData", (req, res) => {
+  if (req.body != null) {
+    if (req.body.fileType === "txt")
+      convertToTXT(req.body, function (response) {
+        res.send(response);
+      });
+    else if (req.body.fileType === "xml") {
+      convertToXML(req.body, function (response) {
+        res.send(response);
+      });
+    } else if (req.body.fileType === "dataBase") {
+      saveToDB(req.body, function (response) {
+        res.send(response);
+      });
+    }
+  }
+  return 0;
+});
+
+//sets up app on given port(3001)
+app.listen(PORT, () => {
+  console.log("Server is running");
+});
 
 module.exports = {};
