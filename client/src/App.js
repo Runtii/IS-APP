@@ -333,6 +333,9 @@ function App() {
     document.getElementById("PutERRORBox").innerHTML = "";
 
     if (lastValidation) {
+      if (dbFlow) {
+        typeOfFile = "dataBase";
+      }
       Axios.put("http://localhost:3001/putData", {
         fileName: filename,
         fileType: typeOfFile,

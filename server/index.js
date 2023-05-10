@@ -221,7 +221,6 @@ const findUniqueData = (data, callback) => {
 
 const saveToDB = (data, callback) => {
   findUniqueData(data, function (dataToSaveArray) {
-    console.log(2, dataToSaveArray);
     dataToSaveArray.map((dataToSave) => {
       db.query(
         "INSERT INTO specyfikacja (Producent, Wielkość_matrycy, Rozdzielczość, Typ_matrycy, Czy_ekran_jest_dotykowy, Procesor, Liczba_rdzeni, Taktowanie, Ram, Pojemność_dysku, Typ_dysku, Karta_graficzna, Pamięć_karty_graficznej, System_operacyjny, Napęd_optyczny) VALUES (?)",
@@ -238,6 +237,7 @@ const saveToDB = (data, callback) => {
 };
 
 app.put("/putData", (req, res) => {
+  console.log(req.body.fileType);
   if (req.body != null) {
     if (req.body.fileType === "txt")
       convertToTXT(req.body, function (response) {
