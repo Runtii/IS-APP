@@ -230,11 +230,13 @@ function App() {
     });
   };
 
-  const getData = (filename, fileType) => {
-    Axios.post("http://localhost:3001/getData", {
-      fileName: filename,
-      fileType: fileType,
-    }).then((response) => {
+  const getData = (fileName, fileType) => {
+    Axios.get(
+      "http://localhost:3001/getData/" +
+        fileType.toString() +
+        "/" +
+        fileName.toString()
+    ).then((response) => {
       console.log(response.data);
       if (
         response.data !== null &&
@@ -245,8 +247,8 @@ function App() {
         if (fileType === "dataBase") {
           appendFromDatabase(response.data);
           setDBFlow(true);
-          console.log("funckja data", data);
-          console.log("funckja status", statusArray);
+          console.log("funkcja data", data);
+          console.log("funkcja status", statusArray);
           console.log("duplicate:", duplicateCount, "fromDB:", fromDBCount);
         } else {
           let statusTemp = [];
@@ -336,7 +338,7 @@ function App() {
       if (dbFlow) {
         typeOfFile = "dataBase";
       }
-      Axios.put("http://localhost:3001/putData", {
+      Axios.post("http://localhost:3001/postData", {
         fileName: filename,
         fileType: typeOfFile,
         data: array,
@@ -346,7 +348,7 @@ function App() {
     }
   };
 
-  const putData = (filename) => {
+  const putData = (fileName) => {
     let typeOfFile = document.getElementById("typePut").value;
     let array = getDataFromFields();
 
@@ -364,7 +366,7 @@ function App() {
         }
       }
     }
-    sendData(lastValidation, typeOfFile, filename, array);
+    sendData(lastValidation, typeOfFile, fileName, array);
   };
 
   const statusBar = (id, source) => {
@@ -419,19 +421,19 @@ function App() {
             <button
               className="button"
               id="getSend"
-              onClick={() =>
+              onClick={() => {
                 getData(
                   document.getElementById("inputGet").value,
                   document.getElementById("typeGet").value
-                )
-              }
+                );
+              }}
             >
               Pobierz dane
             </button>
             <button
               className="button"
               id="getSendDB"
-              onClick={() => getData("", "dataBase")}
+              onClick={() => getData("db", "dataBase")}
             >
               Pobierz dane z Bazy Danych
             </button>
@@ -461,7 +463,10 @@ function App() {
             <button
               className="button"
               id="putSend"
-              onClick={() => putData(document.getElementById("inputPut").value)}
+              onClick={() => {
+                setDBFlow(false);
+                putData(document.getElementById("inputPut").value);
+              }}
             >
               Wyślij dane
             </button>

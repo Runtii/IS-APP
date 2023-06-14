@@ -133,9 +133,10 @@ const readFromFile = (fileName, fileType, callback) => {
   }
 };
 
-app.post("/getData", (req, res) => {
+app.get("/getData/:fileType/:fileName", (req, res) => {
+  console.log(req.params.fileType);
   if (req.body != null) {
-    readFromFile(req.body.fileName, req.body.fileType, function (data) {
+    readFromFile(req.params.fileName, req.params.fileType, function (data) {
       res.send(data);
     });
   }
@@ -236,26 +237,33 @@ const saveToDB = (data, callback) => {
   });
 };
 
-app.put("/putData", (req, res) => {
+app.post("/postData", (req, res) => {
   console.log(req.body.fileType);
-  if (req.body != null) {
-    if (req.body.fileType === "txt")
+  if (req.body === null) return 0;
+
+  switch (req.body.fileType) {
+    case "txt":
       convertToTXT(req.body, function (response) {
         res.send(response);
         return 0;
       });
-    else if (req.body.fileType === "xml") {
+      break;
+    case "xml":
       convertToXML(req.body, function (response) {
         res.send(response);
         return 0;
       });
-    } else if (req.body.fileType === "dataBase") {
+      break;
+    case "dataBase":
       saveToDB(req.body.data, function (response) {
         res.send(response);
         return 0;
       });
-    }
+      break;
+    default:
+      return 0;
   }
+
   return 0;
 });
 
